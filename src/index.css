@@ -1,0 +1,178 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource-variable/plus-jakarta-sans";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Playfair Display Variable", ui-serif, Georgia, serif;
+  --font-serif: "Playfair Display Variable", ui-serif, Georgia, serif;
+
+  /* Brand palette */
+  --color-forest-950: #06231a;
+  --color-forest-900: #0b3326;
+  --color-forest-800: #10422f;
+  --color-forest-700: #175a40;
+  --color-forest-600: #1f7353;
+  --color-forest-100: #dcebe2;
+  --color-forest-50: #eef5f0;
+  --color-gold-600: #a8843f;
+  --color-gold-500: #c19a52;
+  --color-gold-400: #d4b373;
+  --color-gold-200: #ecdcb8;
+  --color-gold-100: #f5ecd8;
+  --color-ivory: #fbf8f1;
+  --color-ivory-200: #f3ede0;
+  --color-charcoal: #24262a;
+  --color-charcoal-soft: #555a60;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  --background: #fbf8f1;
+  --foreground: #24262a;
+  --card: #ffffff;
+  --card-foreground: #24262a;
+  --popover: #ffffff;
+  --popover-foreground: #24262a;
+  --primary: #10422f;
+  --primary-foreground: #fbf8f1;
+  --secondary: #f3ede0;
+  --secondary-foreground: #10422f;
+  --muted: #f3ede0;
+  --muted-foreground: #5d6166;
+  --accent: #f5ecd8;
+  --accent-foreground: #10422f;
+  --destructive: #b42318;
+  --border: #e6dfcf;
+  --input: #ddd5c3;
+  --ring: #c19a52;
+  --radius: 0.75rem;
+
+  /* Motion tokens (Motion Prompt #074 / #081 / #082 use cubic ease-out) */
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-optical-sizing: auto;
+  }
+}
+
+/* Display type: tight leading, negative tracking as it grows */
+.display-xl { font-size: clamp(2.6rem, 6.4vw, 5.4rem); line-height: 1.02; letter-spacing: -0.025em; }
+.display-lg { font-size: clamp(2rem, 4.2vw, 3.4rem); line-height: 1.08; letter-spacing: -0.02em; }
+.eyebrow { font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; }
+
+/* Press feedback on pointer-down (apple-design §1) */
+.press { transition: transform 100ms ease-out; }
+.press:active { transform: scale(0.97); }
+
+/* Motion Prompt #074 Fade-in on scroll · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#074
+   opacity 0→1 and 28px rise over 0.7s cubic ease-out once the element passes 85% of the viewport. */
+.reveal { opacity: 0; transform: translateY(28px); }
+.reveal.is-in {
+  opacity: 1; transform: none;
+  transition: opacity 0.7s var(--ease-out-cubic), transform 0.7s var(--ease-out-cubic);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Motion Prompt #081 Hover lift · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#081
+   rise 10px over 0.3s cubic ease-out; the bigger shadow lives on a pseudo-element so only opacity animates. */
+.lift { position: relative; transition: transform 0.3s var(--ease-out-cubic); box-shadow: 0 2px 6px rgb(28 35 51 / 0.08); }
+.lift::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 12px 22px rgb(28 35 51 / 0.22); opacity: 0; transition: opacity 0.3s var(--ease-out-cubic);
+}
+@media (hover: hover) {
+  .lift:hover { transform: translateY(-10px); }
+  .lift:hover::after { opacity: 1; }
+}
+
+/* Motion Prompt #082 Image zoom on hover · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#082
+   content scales 1→1.15 from centre over 0.5s cubic ease-out inside an overflow-hidden frame. */
+.zoom-frame { overflow: hidden; }
+.zoom-frame img { transition: transform 0.5s var(--ease-out-cubic); }
+@media (hover: hover) {
+  .zoom-frame:hover img, .group:hover .zoom-frame img { transform: scale(1.15); }
+}
+
+/* Motion Prompt #075 Sticky header · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#075
+   the header's shadow fades 0→0.16 over the first 24px after the announcement strip has scrolled away. */
+.header-shadow {
+  position: absolute; left: 0; right: 0; top: 100%; height: 12px; pointer-events: none;
+  background: linear-gradient(to bottom, rgb(28 35 51 / 0.16), rgb(28 35 51 / 0));
+  opacity: var(--sh, 0);
+}
+
+/* Motion Prompt #063 Stepper · MIT License (c) 2026 Shohei Ohtaki · https://showheyohtaki.github.io/motion-prompt/#063
+   on each press the number scales 1.18→1 linearly over 0.25s and is accent-coloured meanwhile. */
+@keyframes stepper-pop {
+  from { transform: scale(1.18); color: var(--color-gold-600); }
+  to { transform: scale(1); }
+}
+.stepper-pop { animation: stepper-pop 0.25s linear; }
+
+/* Masonry */
+.masonry { column-gap: 1rem; }
+.masonry > * { break-inside: avoid; margin-bottom: 1rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal, .reveal.is-in { opacity: 1; transform: none; transition: opacity 0.2s ease; }
+  .lift, .lift:hover { transform: none; }
+  .zoom-frame img, .zoom-frame:hover img, .group:hover .zoom-frame img { transform: none; }
+  .stepper-pop { animation: none; }
+  .press:active { transform: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass { background: var(--color-ivory) !important; backdrop-filter: none !important; }
+}
+
+/* Printable receipt: only the receipt prints */
+@media print {
+  body * { visibility: hidden; }
+  #print-receipt, #print-receipt * { visibility: visible; }
+  #print-receipt { position: absolute; inset: 0; padding: 2rem; background: white; }
+  .no-print { display: none !important; }
+}
